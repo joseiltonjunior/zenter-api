@@ -1,0 +1,31 @@
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: zenter-postgres
+    restart: unless-stopped
+    networks:
+      - app-tier
+    environment:
+      - POSTGRESQL_USERNAME=zenter
+      - POSTGRESQL_PASSWORD=zenter
+      - POSTGRESQL_DATABASE=zenter
+      - POSTGRESQL_ALLOW_REMOTE_CONNECTIONS=yes
+      - POSTGRESQL_TIMEZONE=America/Sao_Paulo
+      - POSTGRESQL_MAX_CONNECTIONS=200
+      - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zenter -d zenter -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
