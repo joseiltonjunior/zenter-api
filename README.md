@@ -8,11 +8,11 @@ A API fornece autenticação, gerenciamento de usuários, validações com Zod e
 
 ## 🚀 Tecnologias
 
-- **NestJS** — estrutura principal da aplicação  
-- **Prisma ORM** — acesso ao banco de dados  
-- **PostgreSQL** — banco relacional  
-- **Zod** — validação de entrada tipada  
-- **PNPM** — gerenciador de pacotes  
+- **NestJS** — estrutura principal da aplicação
+- **Prisma ORM** — acesso ao banco de dados
+- **PostgreSQL** — banco relacional
+- **Zod** — validação de entrada tipada
+- **PNPM** — gerenciador de pacotes
 
 ---
 
@@ -24,7 +24,6 @@ pnpm install
 ```
 
 ---
-
 
 👤 Autor
 
