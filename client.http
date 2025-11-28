@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
+
+# @name create_account
+POST {{baseUrl}}/accounts
+Content-Type: application/json
+
+{
+    "name": "Junior",
+    "email": "Junior@gmail.com",
+    "password": "123456"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+    "email": "Junior@gmail.com",
+    "password": "123456"
+}
+
+###
+
+# @name create_ticket
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Encerrar contato",
+    "description": "Quero encerrar o contrato!"
+}
+
+###
+
+# @name fetch_recent_ticket
+GET {{baseUrl}}/tickets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

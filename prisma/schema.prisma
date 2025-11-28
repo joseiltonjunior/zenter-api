@@ -15,6 +15,12 @@ enum Role {
   ADMIN
 }
 
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
 model User {
   id       String @id @default(uuid())
   name     String
@@ -23,7 +29,38 @@ model User {
   role     Role   @default(USER)
 
   createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("update_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
+  tickets Ticket[]
+  ticketMessages TicketMessage[] @relation("ticket_messages_sender")
+  
   @@map("users")
+}
+
+model Ticket {
+  id         String        @id @default(uuid())
+  title      String
+  description String?
+  status     TicketStatus  @default(OPEN)
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  propertyId String?       @map("property_id") // reservado pro futuro
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime?     @updatedAt @map("updated_at")
+  messages   TicketMessage[]
+
+  @@unique([userId, title])
+  @@map("tickets")
+}
+model TicketMessage {
+  id        String   @id @default(uuid())
+  ticketId  String   @map("ticket_id")
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  senderId  String   @map("sender_id")
+  sender    User     @relation("ticket_messages_sender", fields: [senderId], references: [id])
+  content   String?
+  attachmentUrl String? @map("attachment_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ticket_messages")
 }
