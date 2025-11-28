@@ -30,6 +30,6 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Problema de vazamento",
-    "description": "Meu quarto está com vazamento no teto!"
+    "title": "Encerrar contato",
+    "description": "Quero encerrar o contrato!"
 }
