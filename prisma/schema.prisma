@@ -49,6 +49,7 @@ model Ticket {
   updatedAt  DateTime?     @updatedAt @map("updated_at")
   messages   TicketMessage[]
 
+  @@unique([userId, title])
   @@map("tickets")
 }
 model TicketMessage {
