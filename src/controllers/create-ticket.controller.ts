@@ -2,7 +2,6 @@ import {
   Body,
   ConflictException,
   Controller,
-  HttpCode,
   Post,
   UseGuards,
 } from '@nestjs/common'
@@ -29,7 +28,6 @@ export class CreateTicketController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
-  @HttpCode(201)
   async handle(
     @Body(bodyValidationPipe) body: CreateTicketBodySchema,
     @CurrentUser() user: UserPayload,

@@ -33,3 +33,10 @@ Authorization: Bearer {{authToken}}
     "title": "Encerrar contato",
     "description": "Quero encerrar o contrato!"
 }
+
+###
+
+# @name fetch_recent_ticket
+GET {{baseUrl}}/tickets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
