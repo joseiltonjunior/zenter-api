@@ -58,7 +58,7 @@ model TicketMessage {
   ticket    Ticket   @relation(fields: [ticketId], references: [id])
   senderId  String   @map("sender_id")
   sender    User     @relation("ticket_messages_sender", fields: [senderId], references: [id])
-  content   String?
+  content   String
   attachmentUrl String? @map("attachment_url")
   createdAt DateTime @default(now()) @map("created_at")
 

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module'
 import { AuthenticateController } from './controllers/authenticate.controller'
 import { CreateTicketController } from './controllers/create-ticket.controller'
 import { FetchRecentTicketController } from './controllers/fetch-recent-tickets.controller'
+import { CreateMessageController } from './controllers/create-message.controller'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FetchRecentTicketController } from './controllers/fetch-recent-tickets.
     AuthenticateController,
     CreateTicketController,
     FetchRecentTicketController,
+    CreateMessageController,
   ],
   providers: [PrismaService],
 })
