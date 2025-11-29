@@ -36,6 +36,18 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name create_message_ticket
+POST {{baseUrl}}/messages
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "message": "Quero ver a questão do contrato!", 
+    "ticketId": "475dc3d7-40b5-4c1c-a8fd-abe92afff751"
+}
+
+###
+
 # @name fetch_recent_ticket
 GET {{baseUrl}}/tickets
 Content-Type: application/json
