@@ -39,7 +39,7 @@ export class CreateMessageController {
     try {
       const ticket = await this.prisma.ticket.findUnique({
         where: { id: ticketId },
-        select: { userId: true },
+        select: { userId: true, status: true },
       })
 
       if (!ticket) {
@@ -48,6 +48,10 @@ export class CreateMessageController {
 
       if (ticket.userId !== user.sub) {
         throw new ForbiddenException('You cannot send messages to this ticket.')
+      }
+
+      if (ticket.status === 'CLOSED') {
+        throw new ForbiddenException('Cannot send messages to a closed ticket.')
       }
 
       await this.prisma.ticketMessage.create({
