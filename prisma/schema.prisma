@@ -21,6 +21,28 @@ enum TicketStatus {
   CLOSED
 }
 
+enum ContractStatus {
+  PENDING
+  ACTIVE
+  FINISHED
+  CANCELED
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+  STUDIO
+  KITNET
+  ROOM
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  DISABLED
+}
+
 model User {
   id       String @id @default(uuid())
   name     String
@@ -31,36 +53,75 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  tickets Ticket[]
+  tickets        Ticket[]
   ticketMessages TicketMessage[] @relation("ticket_messages_sender")
-  
+
+  contractsAsTenant RentalContract[] @relation("TenantContracts")
+  contractsAsAdmin  RentalContract[] @relation("AdminContracts")
+
   @@map("users")
 }
 
 model Ticket {
-  id         String        @id @default(uuid())
-  title      String
+  id          String       @id @default(uuid())
+  title       String
   description String?
-  status     TicketStatus  @default(OPEN)
-  userId     String
-  user       User          @relation(fields: [userId], references: [id])
-  propertyId String?       @map("property_id") // reservado pro futuro
-  createdAt  DateTime      @default(now()) @map("created_at")
-  updatedAt  DateTime?     @updatedAt @map("updated_at")
-  messages   TicketMessage[]
+  status      TicketStatus @default(OPEN)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+
+  propertyId String?   @map("property_id")
+  property   Property? @relation(fields: [propertyId], references: [id])
+
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime?       @updatedAt @map("updated_at")
+  messages  TicketMessage[]
 
   @@unique([userId, title])
   @@map("tickets")
 }
+
 model TicketMessage {
-  id        String   @id @default(uuid())
-  ticketId  String   @map("ticket_id")
-  ticket    Ticket   @relation(fields: [ticketId], references: [id])
-  senderId  String   @map("sender_id")
-  sender    User     @relation("ticket_messages_sender", fields: [senderId], references: [id])
-  content   String
-  attachmentUrl String? @map("attachment_url")
-  createdAt DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  ticketId      String   @map("ticket_id")
+  ticket        Ticket   @relation(fields: [ticketId], references: [id])
+  senderId      String   @map("sender_id")
+  sender        User     @relation("ticket_messages_sender", fields: [senderId], references: [id])
+  content       String
+  attachmentUrl String?  @map("attachment_url")
+  createdAt     DateTime @default(now()) @map("created_at")
 
   @@map("ticket_messages")
+}
+
+model Property {
+  id      String         @id @default(uuid())
+  title   String
+  type    PropertyType   @map("type")
+  status  PropertyStatus @default(AVAILABLE) @map("status")
+  address String
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  RentalContract RentalContract[]
+  Ticket         Ticket[]
+
+  @@map("properties")
+}
+
+model RentalContract {
+  id              String         @id @default(uuid())
+  userId          String         @map("user_id")
+  propertyId      String         @map("property_id")
+  adminId         String         @map("admin_id")
+  initialContract DateTime       @map("initial_contract")
+  endContract     DateTime       @map("end_contract")
+  status          ContractStatus @default(PENDING) @map("status")
+
+  user     User     @relation("TenantContracts", fields: [userId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+  admin    User     @relation("AdminContracts", fields: [adminId], references: [id])
+
+  @@map("rental_contracts")
 }
