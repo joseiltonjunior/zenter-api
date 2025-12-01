@@ -46,7 +46,10 @@ export class CreateMessageController {
         throw new NotFoundException('Ticket not found.')
       }
 
-      if (ticket.userId !== user.sub) {
+      const isOwner = ticket.userId === user.sub
+      const isAdmin = user.role === 'ADMIN'
+
+      if (!isOwner && !isAdmin) {
         throw new ForbiddenException('You cannot send messages to this ticket.')
       }
 
