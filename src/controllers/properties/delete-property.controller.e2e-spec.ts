@@ -21,7 +21,7 @@ describe('Delete property (E2E)', () => {
   })
 
   test('[DELETE] /properties/:id - cannot delete OCCUPIED property', async () => {
-    const token = await authenticateTestUser(app, prisma, Role.ADMIN)
+    const { token } = await authenticateTestUser(app, prisma, Role.ADMIN)
 
     const property = await prisma.property.create({
       data: {
@@ -40,7 +40,7 @@ describe('Delete property (E2E)', () => {
   })
 
   test('[DELETE] /properties/:id - admin can delete available property', async () => {
-    const token = await authenticateTestUser(app, prisma, Role.ADMIN)
+    const { token } = await authenticateTestUser(app, prisma, Role.ADMIN)
 
     const property = await request(app.getHttpServer())
       .post('/properties')
@@ -67,7 +67,7 @@ describe('Delete property (E2E)', () => {
   })
 
   test('[DELETE] /properties/:id - user cannot delete', async () => {
-    const token = await authenticateTestUser(app, prisma, Role.USER)
+    const { token } = await authenticateTestUser(app, prisma, Role.USER)
 
     const property = await prisma.property.create({
       data: {

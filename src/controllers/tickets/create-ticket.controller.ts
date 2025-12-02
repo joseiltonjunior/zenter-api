@@ -57,7 +57,7 @@ export class CreateTicketController {
         }
       }
 
-      await this.prisma.ticket.create({
+      const ticket = await this.prisma.ticket.create({
         data: {
           title,
           description: description ?? null,
@@ -65,6 +65,8 @@ export class CreateTicketController {
           propertyId: propertyId ?? null,
         },
       })
+
+      return ticket
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&

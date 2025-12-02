@@ -5,6 +5,8 @@ import { ZodValidationPipe } from '@/pipes/zod-validation-pipe'
 
 import { PrismaService } from '@/prisma/prisma.service'
 import z from 'zod'
+import { CurrentUser } from '@/auth/current-user-decorator'
+import { UserPayload } from '@/auth/jwt.strategy'
 
 const pageQueryParamSchema = z
   .string()
@@ -23,17 +25,38 @@ export class FetchRecentTicketController {
   constructor(private prisma: PrismaService) {}
 
   @Get()
-  async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
-    const perPage = 2
+  async handle(
+    @Query('page', queryValidationPipe) page: PageQueryParamSchema,
+    @CurrentUser() user: UserPayload,
+  ) {
+    const perPage = 10
 
-    const ticket = await this.prisma.ticket.findMany({
+    const isAdmin = user.role === 'ADMIN'
+
+    const where = isAdmin ? {} : { userId: user.sub }
+    const total = await this.prisma.ticket.count({ where })
+
+    const tickets = await this.prisma.ticket.findMany({
       take: perPage,
       skip: (page - 1) * perPage,
+      where,
       orderBy: {
         createdAt: 'desc',
       },
     })
 
-    return { ticket }
+    const totalPages = Math.ceil(total / perPage)
+
+    return {
+      tickets,
+      pagination: {
+        page,
+        perPage,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    }
   }
 }
