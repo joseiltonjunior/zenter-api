@@ -6,8 +6,8 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "name": "Junior",
-    "email": "Junior@gmail.com",
+    "name": "Junior User",
+    "email": "junior@gmail.com",
     "password": "123456"
 }
 
@@ -18,7 +18,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-    "email": "Junior@gmail.com",
+    "email": "junioradmin@gmail.com",
     "password": "123456"
 }
 
@@ -30,7 +30,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Encerrar contato",
+    "title": "me ajude",
     "description": "Quero encerrar o contrato!"
 }
 
@@ -42,8 +42,8 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "message": "Quero ver a questão do contrato!", 
-    "ticketId": "475dc3d7-40b5-4c1c-a8fd-abe92afff751"
+    "message": "irraaaaaa!", 
+    "ticketId": "7fea0e84-4e3f-4458-8b3a-53cd8a3b4858"
 }
 
 ###
@@ -52,3 +52,25 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/tickets
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name create_property
+POST {{baseUrl}}/properties
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Casa D", 
+    "address": "R. Iolanda Rodrigues Sobral, 6 - Iputinga, Recife - PE",
+    "type": "HOUSE"
+}
+
+###
+
+# @name delete_property
+DELETE  {{baseUrl}}/properties/4755ea25-6463-48b6-ad37-6b23e3eb8241
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###

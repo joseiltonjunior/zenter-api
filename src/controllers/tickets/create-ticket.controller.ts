@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  ForbiddenException,
   Post,
   UseGuards,
 } from '@nestjs/common'
@@ -16,6 +17,7 @@ import { z } from 'zod'
 const createTicketBodySchema = z.object({
   title: z.string().min(3),
   description: z.string().optional(),
+  propertyId: z.uuid().optional(),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(createTicketBodySchema)
@@ -32,16 +34,39 @@ export class CreateTicketController {
     @Body(bodyValidationPipe) body: CreateTicketBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { title, description } = body
+    const { title, description, propertyId } = body
 
     try {
-      await this.prisma.ticket.create({
+      if (propertyId) {
+        const isAdmin = user.role === 'ADMIN'
+
+        if (!isAdmin) {
+          const contract = await this.prisma.rentalContract.findFirst({
+            where: {
+              userId: user.sub,
+              propertyId,
+              status: 'ACTIVE',
+            },
+          })
+
+          if (!contract) {
+            throw new ForbiddenException(
+              'You cannot open a ticket for a property you are not renting.',
+            )
+          }
+        }
+      }
+
+      const ticket = await this.prisma.ticket.create({
         data: {
           title,
           description: description ?? null,
           userId: user.sub,
+          propertyId: propertyId ?? null,
         },
       })
+
+      return ticket
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&

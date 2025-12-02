@@ -9,6 +9,8 @@ import { AuthenticateController } from './controllers/users/authenticate.control
 import { CreateTicketController } from './controllers/tickets/create-ticket.controller'
 import { FetchRecentTicketController } from './controllers/tickets/fetch-recent-tickets.controller'
 import { CreateMessageController } from './controllers/tickets/create-message.controller'
+import { CreatePropertyController } from './controllers/properties/create-property.controller'
+import { DeletePropertyController } from './controllers/properties/delete-property.controller'
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { CreateMessageController } from './controllers/tickets/create-message.co
     CreateTicketController,
     FetchRecentTicketController,
     CreateMessageController,
+    CreatePropertyController,
+    DeletePropertyController,
   ],
   providers: [PrismaService],
 })
