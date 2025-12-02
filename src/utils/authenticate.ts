@@ -12,7 +12,7 @@ export async function authenticateTestUser(
   const email = `test-${role}-${Math.random()}@example.com`
   const password = '123456'
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       name: `Test User (${role})`,
       email,
@@ -25,5 +25,5 @@ export async function authenticateTestUser(
     .post('/sessions')
     .send({ email, password })
 
-  return auth.body.access_token
+  return { token: auth.body.access_token, user }
 }

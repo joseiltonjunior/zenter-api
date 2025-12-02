@@ -8,15 +8,15 @@ export class PrismaService
 {
   constructor() {
     super({
-      log: ['warn', 'error'],
+      log: process.env.NODE_ENV === 'test' ? [] : ['warn', 'error'],
     })
   }
 
   onModuleDestroy() {
-    return this.$connect()
+    return this.$disconnect()
   }
 
   onModuleInit() {
-    return this.$disconnect()
+    return this.$connect()
   }
 }
