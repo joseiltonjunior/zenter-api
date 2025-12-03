@@ -11,6 +11,10 @@ import { FetchRecentTicketController } from './controllers/tickets/fetch-recent-
 import { CreateMessageController } from './controllers/tickets/create-message.controller'
 import { CreatePropertyController } from './controllers/properties/create-property.controller'
 import { DeletePropertyController } from './controllers/properties/delete-property.controller'
+import { CreateContractController } from './controllers/rentalContracts/create-contract.controller'
+import { ActivateContractController } from './controllers/rentalContracts/activate-contract.controller'
+import { RejectContractController } from './controllers/rentalContracts/reject-contract.controller'
+import { CancelContractController } from './controllers/rentalContracts/cancel-contract.controller'
 
 @Module({
   imports: [
@@ -28,6 +32,10 @@ import { DeletePropertyController } from './controllers/properties/delete-proper
     CreateMessageController,
     CreatePropertyController,
     DeletePropertyController,
+    CreateContractController,
+    ActivateContractController,
+    RejectContractController,
+    CancelContractController,
   ],
   providers: [PrismaService],
 })

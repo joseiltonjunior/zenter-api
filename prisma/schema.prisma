@@ -24,8 +24,9 @@ enum TicketStatus {
 enum ContractStatus {
   PENDING
   ACTIVE
-  FINISHED
   CANCELED
+  REJECTED
+  EXPIRED
 }
 
 enum PropertyType {
@@ -38,6 +39,7 @@ enum PropertyType {
 
 enum PropertyStatus {
   AVAILABLE
+  RESERVED
   OCCUPIED
   MAINTENANCE
   DISABLED
@@ -101,6 +103,9 @@ model Property {
   status  PropertyStatus @default(AVAILABLE) @map("status")
   address String
 
+  reservedAt    DateTime? @map("reserved_at")
+  reservedUntil DateTime? @map("reserved_until")
+
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
@@ -118,6 +123,13 @@ model RentalContract {
   initialContract DateTime       @map("initial_contract")
   endContract     DateTime       @map("end_contract")
   status          ContractStatus @default(PENDING) @map("status")
+
+  activatedAt    DateTime? @map("activated_at")
+  cancelledAt    DateTime? @map("cancelled_at")
+  rejectedAt     DateTime? @map("rejected_at")
+  expiredAt      DateTime? @map("expired_at")
+  cancelReason   String?   @map("cancel_reason")
+  rejectedReason String?   @map("rejected_reason")
 
   user     User     @relation("TenantContracts", fields: [userId], references: [id])
   property Property @relation(fields: [propertyId], references: [id])
