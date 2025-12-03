@@ -1,13 +1,14 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
+@contractId = {{create_contract.response.body.id}}
 
 # @name create_account
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "name": "Junior User",
-    "email": "junior@gmail.com",
+    "name": "Seu Joao",
+    "email": "seujoao@gmail.com",
     "password": "123456"
 }
 
@@ -18,7 +19,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-    "email": "junioradmin@gmail.com",
+    "email": "admin@gmail.com",
     "password": "123456"
 }
 
@@ -61,7 +62,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Casa D", 
+    "title": "Casa C", 
     "address": "R. Iolanda Rodrigues Sobral, 6 - Iputinga, Recife - PE",
     "type": "HOUSE"
 }
@@ -72,5 +73,50 @@ Authorization: Bearer {{authToken}}
 DELETE  {{baseUrl}}/properties/4755ea25-6463-48b6-ad37-6b23e3eb8241
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+
+# @name create_contract
+POST {{baseUrl}}/contracts
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "initialContract": "2025-12-03T00:00:00.000Z",
+    "endContract": "2026-06-03T23:59:59.999Z",
+    "propertyId": "c98877fd-db9a-48d4-b037-b69e6812c90f",
+    "userId": "da53a241-e22a-489c-afce-60479070bb61"
+
+}
+
+###
+
+# @name activate_contract
+POST {{baseUrl}}/contracts/{{contractId}}/activate
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name reject_contract
+POST {{baseUrl}}/contracts/{{contractId}}/reject
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "reason": "Documentação incompleta."
+}
+
+###
+
+# @name cancel_contract
+POST {{baseUrl}}/contracts/{{contractId}}/cancel
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "reason": "Encerramento antecipado solicitado."
+}
 
 ###
