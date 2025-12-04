@@ -1,4 +1,4 @@
-import { PrismaService } from '@/prisma/prisma.service'
+import { PrismaService } from '@/infra/prisma/prisma.service'
 import request from 'supertest'
 import { Role } from '@prisma/client'
 import { hash } from 'bcryptjs'

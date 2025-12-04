@@ -8,11 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import { CurrentUser } from '@/auth/current-user-decorator'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { UserPayload } from '@/auth/jwt.strategy'
-import { ZodValidationPipe } from '@/pipes/zod-validation-pipe'
-import { PrismaService } from '@/prisma/prisma.service'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+import { PrismaService } from '@/infra/prisma/prisma.service'
 import { z } from 'zod'
 
 const createMessageBodySchema = z.object({
