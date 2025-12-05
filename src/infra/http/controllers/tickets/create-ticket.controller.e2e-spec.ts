@@ -1,5 +1,5 @@
 import { AppModule } from '@/infra/app.module'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { authenticateTestUser } from '@/utils/authenticate'
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
