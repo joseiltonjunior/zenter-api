@@ -1,4 +1,4 @@
-import { PropertyRepository, CreatePropertyProps } from './property-repository'
+import { PropertyRepository, CreatePropertyData } from './property-repository'
 import { Property } from '../entities/property'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -7,7 +7,7 @@ export class InMemoryPropertyRepository implements PropertyRepository {
 
   private activeContracts = new Set<string>()
 
-  async create(data: CreatePropertyProps): Promise<Property> {
+  async create(data: CreatePropertyData): Promise<Property> {
     const p = new Property(
       uuidv4(),
       data.title,

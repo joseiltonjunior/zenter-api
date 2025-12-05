@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import {
+  CreatePropertyData,
   PropertyRepository,
-  CreatePropertyProps,
 } from '@/domain/properties/repositories/property-repository'
-import { Property } from '@/domain/properties/entities/property'
+import { PrismaPropertyMapper } from './mappers/prisma-property.mapper'
 
 @Injectable()
 export class PrismaPropertyRepository implements PropertyRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreatePropertyProps): Promise<Property> {
+  async create(data: CreatePropertyData) {
     const p = await this.prisma.property.create({
       data: {
         title: data.title,
@@ -19,39 +19,20 @@ export class PrismaPropertyRepository implements PropertyRepository {
       },
     })
 
-    return new Property(
-      p.id,
-      p.title,
-      p.type,
-      p.status,
-      p.address,
-      p.reservedAt,
-      p.reservedUntil,
-      p.createdAt,
-    )
+    return PrismaPropertyMapper.toDomain(p)
   }
 
-  async findById(id: string): Promise<Property | null> {
+  async findById(id: string) {
     const p = await this.prisma.property.findUnique({ where: { id } })
     if (!p) return null
-
-    return new Property(
-      p.id,
-      p.title,
-      p.type,
-      p.status,
-      p.address,
-      p.reservedAt,
-      p.reservedUntil,
-      p.createdAt,
-    )
+    return PrismaPropertyMapper.toDomain(p)
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string) {
     await this.prisma.property.delete({ where: { id } })
   }
 
-  async hasActiveContract(id: string): Promise<boolean> {
+  async hasActiveContract(id: string) {
     const contract = await this.prisma.rentalContract.findFirst({
       where: { propertyId: id, status: 'ACTIVE' },
     })

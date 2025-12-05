@@ -1,9 +1,10 @@
 import { Body, ConflictException, Controller, Post } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CreateUserUseCase } from '@/domain/users/use-cases/create-user.use-case'
-import { CreateUserDTO } from '@/domain/users/dtos/create-user.dto'
+
 import { z } from 'zod'
 import { UserAlreadyExistsError } from '@/domain/users/errors/user-already-exists.error'
+import { CreateUserData } from '@/domain/users/repositories/user-repository'
 
 const createAccountBodySchema = z.object({
   name: z.string(),
@@ -22,7 +23,7 @@ export class CreateAccountController {
   @Post()
   async handle(@Body(bodyValidationPipe) body: CreateAccountBodySchema) {
     try {
-      const dto: CreateUserDTO = {
+      const dto: CreateUserData = {
         name: body.name,
         email: body.email,
         password: body.password,

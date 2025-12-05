@@ -1,4 +1,4 @@
-import { UserRepository, CreateUserProps } from './user-repository'
+import { UserRepository, CreateUserData } from './user-repository'
 import { User } from '../entities/user'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -10,7 +10,7 @@ export class InMemoryUserRepository implements UserRepository {
     return user ?? null
   }
 
-  async create(data: CreateUserProps): Promise<User> {
+  async create(data: CreateUserData): Promise<User> {
     const user = new User(
       uuidv4(),
       data.name,

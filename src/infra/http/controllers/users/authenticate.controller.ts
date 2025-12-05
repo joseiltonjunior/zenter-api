@@ -18,7 +18,7 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 export class AuthenticateController {
   constructor(
     private authenticateUserUseCase: AuthenticateUserUseCase,
-    private jwt: JwtService, // infra concern
+    private jwt: JwtService,
   ) {}
 
   @Post()
