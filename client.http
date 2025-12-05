@@ -62,7 +62,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Casa C", 
+    "title": "Casa E", 
     "address": "R. Iolanda Rodrigues Sobral, 6 - Iputinga, Recife - PE",
     "type": "HOUSE"
 }

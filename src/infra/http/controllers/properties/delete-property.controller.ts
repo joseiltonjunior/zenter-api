@@ -1,66 +1,46 @@
 import {
-  BadRequestException,
-  ConflictException,
   Controller,
   Delete,
-  ForbiddenException,
-  NotFoundException,
   Param,
   UseGuards,
+  ForbiddenException,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common'
-
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { DeletePropertyUseCase } from '@/domain/properties/use-cases/delete-property.use-case'
+import { PropertyNotFoundError } from '@/domain/properties/errors/property-not-found.error'
+import { PropertyHasActiveContractError } from '@/domain/properties/errors/property-has-active-contract.error'
+import { PropertyIsOccupiedError } from '@/domain/properties/errors/property-is-occupied.error'
 
 @Controller('/properties/:id')
 @UseGuards(JwtAuthGuard)
 export class DeletePropertyController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private deletePropertyUseCase: DeletePropertyUseCase) {}
 
   @Delete()
   async handle(@Param('id') id: string, @CurrentUser() user: UserPayload) {
-    if (!id || id.trim() === '') {
-      throw new BadRequestException('Property ID is required.')
-    }
-
     if (user.role !== 'ADMIN') {
-      throw new ForbiddenException('Only admins can detele properties.')
+      throw new ForbiddenException('Only admins can delete properties.')
     }
 
-    const property = await this.prisma.property.findUnique({
-      where: { id },
-    })
-
-    if (!property) {
-      throw new NotFoundException('Property not found.')
+    try {
+      await this.deletePropertyUseCase.execute({ id })
+      return { message: 'Property deleted successfully.' }
+    } catch (err: unknown) {
+      if (err instanceof PropertyNotFoundError) {
+        throw new NotFoundException(err.message)
+      }
+      if (err instanceof PropertyHasActiveContractError) {
+        throw new ConflictException(err.message)
+      }
+      if (err instanceof PropertyIsOccupiedError) {
+        throw new ConflictException(err.message)
+      }
+      throw err
     }
-
-    const activeContract = await this.prisma.rentalContract.findFirst({
-      where: {
-        propertyId: id,
-        status: 'ACTIVE',
-      },
-    })
-
-    if (activeContract) {
-      throw new ConflictException(
-        'You cannot delete a property with an active contract.',
-      )
-    }
-
-    if (property.status === 'OCCUPIED') {
-      throw new ConflictException(
-        'You cannot delete a property that is currently occupied.',
-      )
-    }
-
-    await this.prisma.property.delete({
-      where: { id },
-    })
-
-    return { message: 'Property deleted successfully.' }
   }
 }
