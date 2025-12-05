@@ -1,4 +1,4 @@
-import { PropertyType } from '@prisma/client'
+export type PropertyType = 'HOUSE' | 'APARTMENT' | 'STUDIO' | 'KITNET' | 'ROOM'
 
 export interface CreatePropertyDTO {
   title: string
