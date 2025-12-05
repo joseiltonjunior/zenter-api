@@ -1,8 +1,9 @@
 import { Body, ConflictException, Controller, Post } from '@nestjs/common'
-import { hash } from 'bcryptjs'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { CreateUserUseCase } from '@/domain/users/use-cases/create-user.use-case'
+import { CreateUserDTO } from '@/domain/users/dtos/create-user.dto'
 import { z } from 'zod'
+import { UserAlreadyExistsError } from '@/domain/users/errors/user-already-exists.error'
 
 const createAccountBodySchema = z.object({
   name: z.string(),
@@ -16,30 +17,23 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
 export class CreateAccountController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createUserUseCase: CreateUserUseCase) {}
 
   @Post()
   async handle(@Body(bodyValidationPipe) body: CreateAccountBodySchema) {
-    const { name, email, password } = body
-
-    if (email) {
-      const userWithSameEmail = await this.prisma.user.findUnique({
-        where: {
-          email,
-        },
-      })
-
-      if (userWithSameEmail) {
-        throw new ConflictException(
-          'User with same e-mail address already exists.',
-        )
+    try {
+      const dto: CreateUserDTO = {
+        name: body.name,
+        email: body.email,
+        password: body.password,
       }
-
-      const hashedPassword = await hash(password, 8)
-
-      await this.prisma.user.create({
-        data: { name, email, password: hashedPassword },
-      })
+      const created = await this.createUserUseCase.execute(dto)
+      return { id: created.id, name: created.name, email: created.email }
+    } catch (err: unknown) {
+      if (err instanceof UserAlreadyExistsError) {
+        throw new ConflictException(err.message)
+      }
+      throw err
     }
   }
 }

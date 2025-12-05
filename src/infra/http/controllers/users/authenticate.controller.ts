@@ -1,9 +1,9 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { compare } from 'bcryptjs'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { AuthenticateUserUseCase } from '@/domain/users/use-cases/authenticate-user.use-case'
+import { JwtService } from '@nestjs/jwt'
 import z from 'zod'
+import { InvalidCredentialsError } from '@/domain/users/errors/invalid-credentials.error'
 
 const authenticateBodySchema = z.object({
   email: z.email(),
@@ -17,33 +17,26 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 @Controller('/sessions')
 export class AuthenticateController {
   constructor(
-    private jwt: JwtService,
-    private prisma: PrismaService,
+    private authenticateUserUseCase: AuthenticateUserUseCase,
+    private jwt: JwtService, // infra concern
   ) {}
 
   @Post()
   async handle(@Body(bodyValidationPipe) body: AuthenticateBodySchema) {
-    const { email, password } = body
+    try {
+      const result = await this.authenticateUserUseCase.execute({
+        email: body.email,
+        password: body.password,
+      })
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    })
+      const accessToken = this.jwt.sign({ sub: result.id, role: result.role })
 
-    if (!user) {
-      throw new UnauthorizedException('User credentials do not match.')
-    }
-
-    const isPasswordValid = await compare(password, user.password)
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('User credentials do not match.')
-    }
-    const accessToken = this.jwt.sign({ sub: user.id, role: user.role })
-
-    return {
-      access_token: accessToken,
+      return { access_token: accessToken }
+    } catch (err: unknown) {
+      if (err instanceof InvalidCredentialsError) {
+        throw new UnauthorizedException('User credentials do not match.')
+      }
+      throw err
     }
   }
 }

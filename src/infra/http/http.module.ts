@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common'
-import { CreateAccountController } from './controllers/users/create-account.controller'
-import { AuthenticateController } from './controllers/users/authenticate.controller'
 import { CreateTicketController } from './controllers/tickets/create-ticket.controller'
 import { FetchRecentTicketController } from './controllers/tickets/fetch-recent-tickets.controller'
 import { CreateMessageController } from './controllers/tickets/create-message.controller'
@@ -12,12 +10,11 @@ import { RejectContractController } from './controllers/rentalContracts/reject-c
 import { CancelContractController } from './controllers/rentalContracts/cancel-contract.controller'
 
 import { DatabaseModule } from '../database/database.module'
+import { UsersModule } from './modules/users.module'
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UsersModule],
   controllers: [
-    CreateAccountController,
-    AuthenticateController,
     CreateTicketController,
     FetchRecentTicketController,
     CreateMessageController,
