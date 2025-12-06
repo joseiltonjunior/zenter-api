@@ -20,7 +20,7 @@ import { z } from 'zod'
 const createTicketBodySchema = z.object({
   title: z.string().min(3),
   description: z.string().optional(),
-  propertyId: z.string().optional(),
+  propertyId: z.uuid().optional(),
 })
 
 type CreateTicketBody = z.infer<typeof createTicketBodySchema>

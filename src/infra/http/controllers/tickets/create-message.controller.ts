@@ -1,80 +1,70 @@
 import {
   Body,
-  ConflictException,
   Controller,
   ForbiddenException,
   NotFoundException,
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { z } from 'zod'
 
-const createMessageBodySchema = z.object({
-  message: z.string().min(3, 'Message must have at least 3 characters'),
+import { CreateMessageUseCase } from '@/domain/tickets/use-cases/create-message.use-case'
+import { TicketNotFoundError } from '@/domain/tickets/errors/ticket-not-found.error'
+
+import { ClosedTicketError } from '@/domain/tickets/errors/closed-ticket.error'
+import { MessageNotAllowedError } from '@/domain/tickets/errors/message-forbidden.error'
+
+const schema = z.object({
+  message: z.string().min(3),
   ticketId: z.uuid(),
 })
 
-const bodyValidationPipe = new ZodValidationPipe(createMessageBodySchema)
-
-type CreateMessageBodySchema = z.infer<typeof createMessageBodySchema>
+type BodySchema = z.infer<typeof schema>
 
 @Controller('/messages')
 @UseGuards(JwtAuthGuard)
 export class CreateMessageController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createMessage: CreateMessageUseCase) {}
 
   @Post()
   async handle(
-    @Body(bodyValidationPipe) body: CreateMessageBodySchema,
+    @Body(new ZodValidationPipe(schema)) body: BodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { message, ticketId } = body
-
     try {
-      const ticket = await this.prisma.ticket.findUnique({
-        where: { id: ticketId },
-        select: { userId: true, status: true },
+      await this.createMessage.execute({
+        content: body.message,
+        ticketId: body.ticketId,
+        senderId: user.sub,
+        senderRole: user.role,
       })
-
-      if (!ticket) {
-        throw new NotFoundException('Ticket not found.')
+    } catch (err) {
+      if (err instanceof TicketNotFoundError) {
+        throw new NotFoundException({
+          message: 'Ticket not found',
+          code: err.message,
+        })
       }
 
-      const isOwner = ticket.userId === user.sub
-      const isAdmin = user.role === 'ADMIN'
-
-      if (!isOwner && !isAdmin) {
-        throw new ForbiddenException('You cannot send messages to this ticket.')
+      if (err instanceof MessageNotAllowedError) {
+        throw new ForbiddenException({
+          message: 'You cannot send messages to this ticket',
+          code: err.message,
+        })
       }
 
-      if (ticket.status === 'CLOSED') {
-        throw new ForbiddenException('Cannot send messages to a closed ticket.')
+      if (err instanceof ClosedTicketError) {
+        throw new ForbiddenException({
+          message: 'Cannot send messages to a closed ticket',
+          code: err.message,
+        })
       }
 
-      await this.prisma.ticketMessage.create({
-        data: {
-          content: message,
-          senderId: user.sub,
-          ticketId,
-        },
-      })
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          'You already have a ticket with this title.',
-        )
-      }
-
-      throw error
+      throw err
     }
   }
 }
