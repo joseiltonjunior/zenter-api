@@ -1,4 +1,4 @@
-import { PropertyType } from '@prisma/client'
+import { PropertyType } from '../dtos/create-property.dto'
 import { Property } from '../entities/property'
 
 export interface CreatePropertyData {

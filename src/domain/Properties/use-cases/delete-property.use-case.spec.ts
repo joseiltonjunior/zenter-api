@@ -19,7 +19,7 @@ describe('DeletePropertyUseCase', () => {
 
     await useCase.execute({ id: property.id })
 
-    expect(repo.items.length).toBe(0)
+    expect(repo.properties.length).toBe(0)
   })
 
   it('should throw if property does not exist', async () => {

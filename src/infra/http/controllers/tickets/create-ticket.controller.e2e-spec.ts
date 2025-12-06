@@ -140,6 +140,6 @@ describe('Create ticket (E2E)', () => {
       })
 
     expect(res.statusCode).toBe(409)
-    expect(res.body.message).toBe('You already have a ticket with this title.')
+    expect(res.body.message).toBe('A ticket with this title already exists.')
   })
 })

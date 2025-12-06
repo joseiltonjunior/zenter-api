@@ -30,4 +30,4 @@ import { PrismaPropertyRepository } from '@/infra/database/prisma/prisma-propert
   ],
   exports: [CreatePropertyUseCase, DeletePropertyUseCase],
 })
-export class PropertyModule {}
+export class PropertiesModule {}
