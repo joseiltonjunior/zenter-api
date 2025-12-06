@@ -14,6 +14,6 @@ describe('CreatePropertyUseCase', () => {
 
     expect(result.id).toBeDefined()
     expect(result.title).toBe('Casa A')
-    expect(repo.items.length).toBe(1)
+    expect(repo.properties.length).toBe(1)
   })
 })

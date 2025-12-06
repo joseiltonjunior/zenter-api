@@ -17,7 +17,9 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "test:ui": "vitest --ui",
+    "test:e2e:ui": "vitest --ui --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -48,6 +50,7 @@
     "@typescript-eslint/eslint-plugin": "^8.48.0",
     "@typescript-eslint/parser": "^8.48.0",
     "@vitest/coverage-v8": "^4.0.14",
+    "@vitest/ui": "4.0.14",
     "dotenv": "^17.2.3",
     "eslint": "8.57.1",
     "eslint-config-prettier": "^10.1.8",
