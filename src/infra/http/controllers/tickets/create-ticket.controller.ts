@@ -6,78 +6,60 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+
+import { CreateTicketUseCase } from '@/domain/tickets/use-cases/create-ticket.use-case'
+import { ForbiddenToOpenTicketError } from '@/domain/tickets/errors/forbidden-to-open-ticket.error'
+import { DuplicateTicketError } from '@/domain/tickets/errors/duplicate-ticket.error'
+
 import { z } from 'zod'
 
 const createTicketBodySchema = z.object({
   title: z.string().min(3),
   description: z.string().optional(),
-  propertyId: z.uuid().optional(),
+  propertyId: z.string().optional(),
 })
 
-const bodyValidationPipe = new ZodValidationPipe(createTicketBodySchema)
-
-type CreateTicketBodySchema = z.infer<typeof createTicketBodySchema>
+type CreateTicketBody = z.infer<typeof createTicketBodySchema>
 
 @Controller('/tickets')
 @UseGuards(JwtAuthGuard)
 export class CreateTicketController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createTicket: CreateTicketUseCase) {}
 
   @Post()
   async handle(
-    @Body(bodyValidationPipe) body: CreateTicketBodySchema,
+    @Body(new ZodValidationPipe(createTicketBodySchema)) body: CreateTicketBody,
     @CurrentUser() user: UserPayload,
   ) {
-    const { title, description, propertyId } = body
-
     try {
-      if (propertyId) {
-        const isAdmin = user.role === 'ADMIN'
-
-        if (!isAdmin) {
-          const contract = await this.prisma.rentalContract.findFirst({
-            where: {
-              userId: user.sub,
-              propertyId,
-              status: 'ACTIVE',
-            },
-          })
-
-          if (!contract) {
-            throw new ForbiddenException(
-              'You cannot open a ticket for a property you are not renting.',
-            )
-          }
-        }
-      }
-
-      const ticket = await this.prisma.ticket.create({
-        data: {
-          title,
-          description: description ?? null,
-          userId: user.sub,
-          propertyId: propertyId ?? null,
-        },
+      return await this.createTicket.execute({
+        title: body.title,
+        description: body.description,
+        propertyId: body.propertyId,
+        userId: user.sub,
+        userRole: user.role,
       })
-
-      return ticket
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          'You already have a ticket with this title.',
-        )
+    } catch (err) {
+      if (err instanceof ForbiddenToOpenTicketError) {
+        throw new ForbiddenException({
+          message:
+            'You cannot open a ticket for a property you are not renting.',
+          code: err.message,
+        })
       }
 
-      throw error
+      if (err instanceof DuplicateTicketError) {
+        throw new ConflictException({
+          message: 'A ticket with this title already exists.',
+          code: err.message,
+        })
+      }
+
+      throw err
     }
   }
 }

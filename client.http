@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "me ajude",
+    "title": "Criando Ticket",
     "description": "Quero encerrar o contrato!"
 }
 
