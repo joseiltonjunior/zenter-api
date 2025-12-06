@@ -3,28 +3,28 @@ import { Property } from '../entities/property'
 import { v4 as uuidv4 } from 'uuid'
 
 export class InMemoryPropertyRepository implements PropertyRepository {
-  items: Property[] = []
+  properties: Property[] = []
 
   private activeContracts = new Set<string>()
 
   async create(data: CreatePropertyData): Promise<Property> {
-    const p = new Property(
+    const property = new Property(
       uuidv4(),
       data.title,
       data.type,
       'AVAILABLE',
       data.address,
     )
-    this.items.push(p)
-    return p
+    this.properties.push(property)
+    return property
   }
 
   async findById(id: string): Promise<Property | null> {
-    return this.items.find((i) => i.id === id) ?? null
+    return this.properties.find((i) => i.id === id) ?? null
   }
 
   async delete(id: string): Promise<void> {
-    this.items = this.items.filter((i) => i.id !== id)
+    this.properties = this.properties.filter((i) => i.id !== id)
   }
 
   async hasActiveContract(id: string): Promise<boolean> {

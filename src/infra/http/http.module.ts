@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { CreateTicketController } from './controllers/tickets/create-ticket.controller'
+
 import { FetchRecentTicketController } from './controllers/tickets/fetch-recent-tickets.controller'
 import { CreateMessageController } from './controllers/tickets/create-message.controller'
 import { CreateContractController } from './controllers/rentalContracts/create-contract.controller'
@@ -9,12 +9,12 @@ import { CancelContractController } from './controllers/rentalContracts/cancel-c
 
 import { DatabaseModule } from '../database/database.module'
 import { UsersModule } from './modules/users.module'
-import { PropertyModule } from './modules/properties.module'
+import { PropertiesModule } from './modules/properties.module'
+import { TicketsModule } from './modules/tickets.module'
 
 @Module({
-  imports: [DatabaseModule, UsersModule, PropertyModule],
+  imports: [DatabaseModule, UsersModule, PropertiesModule, TicketsModule],
   controllers: [
-    CreateTicketController,
     FetchRecentTicketController,
     CreateMessageController,
     CreateContractController,

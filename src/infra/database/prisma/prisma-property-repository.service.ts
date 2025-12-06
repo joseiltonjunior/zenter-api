@@ -11,7 +11,7 @@ export class PrismaPropertyRepository implements PropertyRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreatePropertyData) {
-    const p = await this.prisma.property.create({
+    const property = await this.prisma.property.create({
       data: {
         title: data.title,
         type: data.type,
@@ -19,13 +19,13 @@ export class PrismaPropertyRepository implements PropertyRepository {
       },
     })
 
-    return PrismaPropertyMapper.toDomain(p)
+    return PrismaPropertyMapper.toDomain(property)
   }
 
   async findById(id: string) {
-    const p = await this.prisma.property.findUnique({ where: { id } })
-    if (!p) return null
-    return PrismaPropertyMapper.toDomain(p)
+    const property = await this.prisma.property.findUnique({ where: { id } })
+    if (!property) return null
+    return PrismaPropertyMapper.toDomain(property)
   }
 
   async delete(id: string) {
