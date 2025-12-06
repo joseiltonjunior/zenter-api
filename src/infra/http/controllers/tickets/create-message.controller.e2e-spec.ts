@@ -130,7 +130,7 @@ describe('Create message (E2E)', () => {
       })
 
     expect(res.statusCode).toBe(404)
-    expect(res.body.message).toBe('Ticket not found.')
+    expect(res.body.message).toBe('Ticket not found')
   })
 
   test('[POST] /messages - cannot send message to CLOSED ticket', async () => {
@@ -153,6 +153,6 @@ describe('Create message (E2E)', () => {
       })
 
     expect(res.statusCode).toBe(403)
-    expect(res.body.message).toBe('Cannot send messages to a closed ticket.')
+    expect(res.body.message).toBe('Cannot send messages to a closed ticket')
   })
 })

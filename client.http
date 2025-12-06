@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Criando Ticket",
+    "title": "Vamos!",
     "description": "Quero encerrar o contrato!"
 }
 
@@ -43,8 +43,8 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "message": "irraaaaaa!", 
-    "ticketId": "7fea0e84-4e3f-4458-8b3a-53cd8a3b4858"
+    "message": "me ajuda!", 
+    "ticketId": "71b89cd2-e614-4a50-b89f-7c227d8c3dba"
 }
 
 ###
