@@ -31,7 +31,24 @@ export class InMemoryPropertyRepository implements PropertyRepository {
     return this.activeContracts.has(id)
   }
 
-  markAsActiveContract(id: string) {
+  async markAsActiveContract(id: string) {
     this.activeContracts.add(id)
+  }
+
+  async reserveProperty(
+    propertyId: string,
+    reservedAt: Date,
+    reservedUntil: Date,
+  ): Promise<boolean> {
+    const property = this.properties.find((p) => p.id === propertyId)
+
+    if (!property) return false
+    if (property.status !== 'AVAILABLE') return false
+
+    property.status = 'RESERVED'
+    property.reservedAt = reservedAt
+    property.reservedUntil = reservedUntil
+
+    return true
   }
 }

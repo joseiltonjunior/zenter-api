@@ -124,6 +124,8 @@ model RentalContract {
   endContract     DateTime       @map("end_contract")
   status          ContractStatus @default(PENDING) @map("status")
 
+  createdAt DateTime @default(now()) @map("created_at")
+
   activatedAt    DateTime? @map("activated_at")
   cancelledAt    DateTime? @map("cancelled_at")
   rejectedAt     DateTime? @map("rejected_at")
