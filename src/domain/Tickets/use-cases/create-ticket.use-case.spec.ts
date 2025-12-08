@@ -3,16 +3,16 @@ import { CreateTicketUseCase } from './create-ticket.use-case'
 import { ForbiddenToOpenTicketError } from '../errors/forbidden-to-open-ticket.error'
 import { DuplicateTicketError } from '../errors/duplicate-ticket.error'
 import { InMemoryTicketRepository } from '../repositories/in-memory-ticket.repository'
-import { InMemoryContractRepository } from '../repositories/in-memory-contract.repository'
+import { InMemoryRentalContractRepository } from '@/domain/RentalContracts/repositories/in-memory-rental-contract.repository'
 
 describe('CreateTicketUseCase', () => {
   let ticketRepo: InMemoryTicketRepository
-  let contractRepo: InMemoryContractRepository
+  let contractRepo: InMemoryRentalContractRepository
   let useCase: CreateTicketUseCase
 
   beforeEach(() => {
     ticketRepo = new InMemoryTicketRepository()
-    contractRepo = new InMemoryContractRepository()
+    contractRepo = new InMemoryRentalContractRepository()
     useCase = new CreateTicketUseCase(ticketRepo, contractRepo)
   })
 

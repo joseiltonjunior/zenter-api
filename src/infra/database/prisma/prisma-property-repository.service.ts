@@ -38,4 +38,17 @@ export class PrismaPropertyRepository implements PropertyRepository {
     })
     return !!contract
   }
+
+  async reserveProperty(id: string, reservedAt: Date, reservedUntil: Date) {
+    const result = await this.prisma.property.updateMany({
+      where: { id, status: 'AVAILABLE' },
+      data: {
+        status: 'RESERVED',
+        reservedAt,
+        reservedUntil,
+      },
+    })
+
+    return result.count > 0
+  }
 }

@@ -1,113 +1,64 @@
 import {
-  BadRequestException,
   Body,
-  ConflictException,
   Controller,
-  ForbiddenException,
-  InternalServerErrorException,
   Post,
   UseGuards,
+  ForbiddenException,
+  BadRequestException,
+  ConflictException,
 } from '@nestjs/common'
 
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+
 import { z } from 'zod'
+import { CreateRentalContractUseCase } from '@/domain/RentalContracts/use-cases/create-rental-contract.use-case'
+import { OnlyAdminCanCreateContractError } from '@/domain/RentalContracts/errors/only-admin-can-create-contract.error'
+import { InvalidContractDatesError } from '@/domain/RentalContracts/errors/invalid-contract-dates.error'
+import { TenantNotFoundError } from '@/domain/RentalContracts/errors/tenant-not-found.error'
+import { PropertyNotAvailableError } from '@/domain/RentalContracts/errors/property-not-available.error'
 
-const createContractBodySchema = z.object({
-  initialContract: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
-    message: 'initialContract must be an ISO date string',
-  }),
-  endContract: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
-    message: 'endContract must be an ISO date string',
-  }),
+const bodySchema = z.object({
+  initialContract: z.string(),
+  endContract: z.string(),
   propertyId: z.string(),
-  userId: z.string(),
+  userId: z.uuid(),
 })
-
-const bodyValidationPipe = new ZodValidationPipe(createContractBodySchema)
-
-type CreateContractBodySchema = z.infer<typeof createContractBodySchema>
 
 @Controller('/contracts')
 @UseGuards(JwtAuthGuard)
 export class CreateContractController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createContract: CreateRentalContractUseCase) {}
 
   @Post()
   async handle(
-    @Body(bodyValidationPipe) body: CreateContractBodySchema,
+    @Body(new ZodValidationPipe(bodySchema)) body: z.infer<typeof bodySchema>,
     @CurrentUser() user: UserPayload,
   ) {
-    const { initialContract, endContract, propertyId, userId } = body
-
-    const isAdmin = user.role === 'ADMIN'
-
-    if (!isAdmin) {
-      throw new ForbiddenException('Only admins can create contracts.')
-    }
-
-    const initialDate = new Date(initialContract)
-    const endDate = new Date(endContract)
-
-    if (initialDate >= endDate) {
-      throw new BadRequestException(
-        'initialContract must be before endContract.',
-      )
-    }
-
     try {
-      const result = await this.prisma.$transaction(async (tx) => {
-        const reserved = await tx.property.updateMany({
-          where: {
-            id: propertyId,
-            status: 'AVAILABLE',
-          },
-          data: {
-            status: 'RESERVED',
-            reservedAt: new Date(),
-            reservedUntil: initialDate,
-          },
-        })
-
-        if (reserved.count === 0) {
-          throw new ConflictException('Property is not available to reserve.')
-        }
-
-        const tenant = await tx.user.findUnique({
-          where: { id: userId },
-          select: { id: true },
-        })
-        if (!tenant) {
-          throw new BadRequestException('User (tenant) not found.')
-        }
-
-        const contract = await tx.rentalContract.create({
-          data: {
-            initialContract: initialDate,
-            endContract: endDate,
-            adminId: user.sub,
-            propertyId,
-            userId,
-          },
-        })
-
-        return contract
+      return await this.createContract.execute({
+        initialContract: new Date(body.initialContract),
+        endContract: new Date(body.endContract),
+        propertyId: body.propertyId,
+        userId: body.userId,
+        adminId: user.sub,
       })
-
-      return result
     } catch (err) {
-      if (
-        err instanceof ConflictException ||
-        err instanceof BadRequestException ||
-        err instanceof ForbiddenException
-      ) {
-        throw err
-      }
-      console.error('Failed creating contract:', err)
-      throw new InternalServerErrorException('Failed to create contract.')
+      if (err instanceof OnlyAdminCanCreateContractError)
+        throw new ForbiddenException(err.message)
+
+      if (err instanceof InvalidContractDatesError)
+        throw new BadRequestException(err.message)
+
+      if (err instanceof TenantNotFoundError)
+        throw new BadRequestException(err.message)
+
+      if (err instanceof PropertyNotAvailableError)
+        throw new ConflictException(err.message)
+
+      throw err
     }
   }
 }

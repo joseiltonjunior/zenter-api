@@ -38,6 +38,6 @@ import {
       inject: [UserRepositoryToken],
     },
   ],
-  exports: [CreateUserUseCase, AuthenticateUserUseCase],
+  exports: [CreateUserUseCase, AuthenticateUserUseCase, UserRepositoryToken],
 })
 export class UsersModule {}

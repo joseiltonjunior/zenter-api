@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { TicketRepositoryToken } from '@/domain/tickets/repositories/ticket-repository'
-import { ContractRepositoryToken } from '@/domain/tickets/repositories/contract-repository'
 
 import { CreateTicketUseCase } from '@/domain/tickets/use-cases/create-ticket.use-case'
 import { CreateMessageUseCase } from '@/domain/tickets/use-cases/create-message.use-case'
@@ -11,7 +10,11 @@ import { CreateTicketController } from '@/infra/http/controllers/tickets/create-
 import { CreateMessageController } from '@/infra/http/controllers/tickets/create-message.controller'
 
 import { PrismaTicketRepository } from '@/infra/database/prisma/prisma-ticket-repository.service'
-import { PrismaContractRepository } from '@/infra/database/prisma/prisma-contract-repository.service'
+
+import { RentalContractRepositoryToken } from '@/domain/RentalContracts/repositories/rental-contract-repository'
+import { PropertiesModule } from './properties.module'
+import { UsersModule } from './users.module'
+import { RentalContractsModule } from './rental-contracts.module'
 
 @Module({
   controllers: [CreateTicketController, CreateMessageController],
@@ -24,15 +27,10 @@ import { PrismaContractRepository } from '@/infra/database/prisma/prisma-contrac
     },
 
     {
-      provide: ContractRepositoryToken,
-      useClass: PrismaContractRepository,
-    },
-
-    {
       provide: CreateTicketUseCase,
       useFactory: (ticketsRepo, contractsRepo) =>
         new CreateTicketUseCase(ticketsRepo, contractsRepo),
-      inject: [TicketRepositoryToken, ContractRepositoryToken],
+      inject: [TicketRepositoryToken, RentalContractRepositoryToken],
     },
 
     {
@@ -41,6 +39,7 @@ import { PrismaContractRepository } from '@/infra/database/prisma/prisma-contrac
       inject: [TicketRepositoryToken],
     },
   ],
-  exports: [CreateTicketUseCase, CreateMessageUseCase],
+  imports: [PropertiesModule, UsersModule, RentalContractsModule],
+  exports: [CreateTicketUseCase, CreateMessageUseCase, TicketRepositoryToken],
 })
 export class TicketsModule {}

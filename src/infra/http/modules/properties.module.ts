@@ -28,6 +28,10 @@ import { PrismaPropertyRepository } from '@/infra/database/prisma/prisma-propert
       inject: [PropertyRepositoryToken],
     },
   ],
-  exports: [CreatePropertyUseCase, DeletePropertyUseCase],
+  exports: [
+    CreatePropertyUseCase,
+    DeletePropertyUseCase,
+    PropertyRepositoryToken,
+  ],
 })
 export class PropertiesModule {}
