@@ -7,8 +7,8 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "name": "Seu Joao",
-    "email": "seujoao3@gmail.com",
+    "name": "Seu Paulo",
+    "email": "seupaulo@gmail.com",
     "password": "123456"
 }
 
@@ -62,7 +62,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Casa E", 
+    "title": "Casa F", 
     "address": "R. Iolanda Rodrigues Sobral, 6 - Iputinga, Recife - PE",
     "type": "HOUSE"
 }
@@ -85,8 +85,8 @@ Authorization: Bearer {{authToken}}
 {
     "initialContract": "2025-12-03T00:00:00.000Z",
     "endContract": "2026-06-03T23:59:59.999Z",
-    "propertyId": "c98877fd-db9a-48d4-b037-b69e6812c90f",
-    "userId": "da53a241-e22a-489c-afce-60479070bb61"
+    "propertyId": "091499af-1ba2-4bc9-a9c2-4f7229e33021",
+    "userId": "ddcad7e2-c0df-4057-b21c-9edfabf5e478"
 
 }
 

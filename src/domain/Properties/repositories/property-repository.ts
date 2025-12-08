@@ -12,6 +12,11 @@ export interface PropertyRepository {
   delete(id: string): Promise<void>
   hasActiveContract(id: string): Promise<boolean>
   findById(id: string): Promise<Property | null>
+  reserveProperty(
+    propertyId: string,
+    reservedAt: Date,
+    reservedUntil: Date,
+  ): Promise<boolean>
 }
 
 export const PropertyRepositoryToken = Symbol('PropertyRepository')

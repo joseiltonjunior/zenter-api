@@ -4,6 +4,7 @@ export type CreateUserData = {
   name: string
   email: string
   password: string
+  role?: 'USER' | 'ADMIN'
 }
 
 export interface ResponseCreateUserProps {
@@ -16,6 +17,7 @@ export interface ResponseCreateUserProps {
 
 export interface UserRepository {
   findByEmail(email: string): Promise<User | null>
+  findById(id: string): Promise<User | null>
   create(data: CreateUserData): Promise<User>
 }
 

@@ -1,13 +1,14 @@
 import { TicketRepository } from '../repositories/ticket-repository'
-import { ContractRepository } from '../repositories/contract-repository'
+
 import { ForbiddenToOpenTicketError } from '../errors/forbidden-to-open-ticket.error'
 import { DuplicateTicketError } from '../errors/duplicate-ticket.error'
 import { CreateTicketDTO } from '../dtos/create-ticket.dto'
+import { RentalContractRepository } from '@/domain/RentalContracts/repositories/rental-contract-repository'
 
 export class CreateTicketUseCase {
   constructor(
     private tickets: TicketRepository,
-    private contracts: ContractRepository,
+    private contracts: RentalContractRepository,
   ) {}
 
   async execute(input: CreateTicketDTO) {
