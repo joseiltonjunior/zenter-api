@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Vamos!",
+    "title": "deu boooom!!",
     "description": "Quero encerrar o contrato!"
 }
 
