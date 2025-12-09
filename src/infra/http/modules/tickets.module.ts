@@ -15,9 +15,15 @@ import { RentalContractRepositoryToken } from '@/domain/RentalContracts/reposito
 import { PropertiesModule } from './properties.module'
 import { UsersModule } from './users.module'
 import { RentalContractsModule } from './rental-contracts.module'
+import { FetchRecentTicketController } from '../controllers/tickets/fetch-recent-tickets.controller'
+import { FetchRecentTicketsUseCase } from '@/domain/Tickets/use-cases/fetch-recent-tickets.use-case'
 
 @Module({
-  controllers: [CreateTicketController, CreateMessageController],
+  controllers: [
+    CreateTicketController,
+    CreateMessageController,
+    FetchRecentTicketController,
+  ],
   providers: [
     PrismaService,
 
@@ -38,8 +44,19 @@ import { RentalContractsModule } from './rental-contracts.module'
       useFactory: (ticketsRepo) => new CreateMessageUseCase(ticketsRepo),
       inject: [TicketRepositoryToken],
     },
+
+    {
+      provide: FetchRecentTicketsUseCase,
+      useFactory: (ticketsRepo) => new FetchRecentTicketsUseCase(ticketsRepo),
+      inject: [TicketRepositoryToken],
+    },
   ],
   imports: [PropertiesModule, UsersModule, RentalContractsModule],
-  exports: [CreateTicketUseCase, CreateMessageUseCase, TicketRepositoryToken],
+  exports: [
+    CreateTicketUseCase,
+    CreateMessageUseCase,
+    FetchRecentTicketsUseCase,
+    TicketRepositoryToken,
+  ],
 })
 export class TicketsModule {}

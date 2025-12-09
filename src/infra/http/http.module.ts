@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common'
 
-import { FetchRecentTicketController } from './controllers/tickets/fetch-recent-tickets.controller'
-
 import { ActivateContractController } from './controllers/rentalContracts/activate-contract.controller'
 import { RejectContractController } from './controllers/rentalContracts/reject-contract.controller'
 import { CancelContractController } from './controllers/rentalContracts/cancel-contract.controller'
@@ -21,7 +19,6 @@ import { RentalContractsModule } from './modules/rental-contracts.module'
     RentalContractsModule,
   ],
   controllers: [
-    FetchRecentTicketController,
     ActivateContractController,
     RejectContractController,
     CancelContractController,
