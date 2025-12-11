@@ -25,6 +25,14 @@ export class PrismaRentalContractRepository
     return PrismaRentalContractMapper.toDomain(contract)
   }
 
+  async findById(id: string) {
+    const contract = await this.prisma.rentalContract.findUnique({
+      where: { id },
+    })
+
+    return contract ? PrismaRentalContractMapper.toDomain(contract) : null
+  }
+
   async userHasActiveContract(userId: string, propertyId: string) {
     const contract = await this.prisma.rentalContract.findFirst({
       where: {
@@ -34,5 +42,17 @@ export class PrismaRentalContractRepository
       },
     })
     return !!contract
+  }
+
+  async activate(id: string): Promise<RentalContract | null> {
+    const contract = await this.prisma.rentalContract.update({
+      where: { id },
+      data: {
+        status: 'ACTIVE',
+        activatedAt: new Date(),
+      },
+    })
+
+    return PrismaRentalContractMapper.toDomain(contract)
   }
 }

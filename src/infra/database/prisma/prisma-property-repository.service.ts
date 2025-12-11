@@ -51,4 +51,29 @@ export class PrismaPropertyRepository implements PropertyRepository {
 
     return result.count > 0
   }
+
+  async markAsOccupied(propertyId: string) {
+    await this.prisma.property.updateMany({
+      where: {
+        id: propertyId,
+        OR: [{ status: 'RESERVED' }, { status: 'AVAILABLE' }],
+      },
+      data: {
+        status: 'OCCUPIED',
+        reservedAt: null,
+        reservedUntil: null,
+      },
+    })
+  }
+
+  async markAsAvailable(propertyId: string) {
+    await this.prisma.property.updateMany({
+      where: { id: propertyId },
+      data: {
+        status: 'AVAILABLE',
+        reservedAt: null,
+        reservedUntil: null,
+      },
+    })
+  }
 }

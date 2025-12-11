@@ -11,9 +11,11 @@ import { RentalContractRepositoryToken } from '@/domain/RentalContracts/reposito
 import { CreateRentalContractUseCase } from '@/domain/RentalContracts/use-cases/create-rental-contract.use-case'
 import { PropertiesModule } from './properties.module'
 import { UsersModule } from './users.module'
+import { ActivateRentalContractUseCase } from '@/domain/RentalContracts/use-cases/activate-rental-contract.use-case'
+import { ActivateContractController } from '../controllers/rentalContracts/activate-contract.controller'
 
 @Module({
-  controllers: [CreateContractController],
+  controllers: [CreateContractController, ActivateContractController],
   providers: [
     PrismaService,
 
@@ -32,8 +34,23 @@ import { UsersModule } from './users.module'
         UserRepositoryToken,
       ],
     },
+
+    {
+      provide: ActivateRentalContractUseCase,
+      useFactory: (contracts, properties, users) =>
+        new ActivateRentalContractUseCase(contracts, properties, users),
+      inject: [
+        RentalContractRepositoryToken,
+        PropertyRepositoryToken,
+        UserRepositoryToken,
+      ],
+    },
   ],
   imports: [PropertiesModule, UsersModule],
-  exports: [CreateRentalContractUseCase, RentalContractRepositoryToken],
+  exports: [
+    CreateRentalContractUseCase,
+    ActivateRentalContractUseCase,
+    RentalContractRepositoryToken,
+  ],
 })
 export class RentalContractsModule {}
