@@ -32,11 +32,28 @@ export class InMemoryRentalContractRepository
     return contract
   }
 
-  async markActive(userId: string, propertyId: string) {
-    this.activeContracts.add(`${userId}:${propertyId}`)
+  async findById(id: string) {
+    return this.items.find((t) => t.id === id) ?? null
+  }
+
+  async activate(id: string) {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (contract.status !== 'PENDING') return null
+
+    contract.status = 'ACTIVE'
+    contract.activatedAt = new Date()
+
+    return contract
   }
 
   async userHasActiveContract(userId: string, propertyId: string) {
-    return this.activeContracts.has(`${userId}:${propertyId}`)
+    return this.items.some(
+      (c) =>
+        c.userId === userId &&
+        c.propertyId === propertyId &&
+        c.status === 'ACTIVE',
+    )
   }
 }

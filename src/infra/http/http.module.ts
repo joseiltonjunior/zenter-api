@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 
-import { ActivateContractController } from './controllers/rentalContracts/activate-contract.controller'
 import { RejectContractController } from './controllers/rentalContracts/reject-contract.controller'
 import { CancelContractController } from './controllers/rentalContracts/cancel-contract.controller'
 
@@ -18,10 +17,6 @@ import { RentalContractsModule } from './modules/rental-contracts.module'
     TicketsModule,
     RentalContractsModule,
   ],
-  controllers: [
-    ActivateContractController,
-    RejectContractController,
-    CancelContractController,
-  ],
+  controllers: [RejectContractController, CancelContractController],
 })
 export class HttpModule {}

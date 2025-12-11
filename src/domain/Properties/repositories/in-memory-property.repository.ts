@@ -51,4 +51,22 @@ export class InMemoryPropertyRepository implements PropertyRepository {
 
     return true
   }
+
+  async markAsOccupied(propertyId: string): Promise<void> {
+    const p = this.properties.find((i) => i.id === propertyId)
+    if (p) {
+      p.status = 'OCCUPIED'
+      p.reservedAt = null
+      p.reservedUntil = null
+    }
+  }
+
+  async markAsAvailable(propertyId: string): Promise<void> {
+    const p = this.properties.find((i) => i.id === propertyId)
+    if (p) {
+      p.status = 'AVAILABLE'
+      p.reservedAt = null
+      p.reservedUntil = null
+    }
+  }
 }
