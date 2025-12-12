@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import {
-  UserRepository,
-  CreateUserData,
-} from '@/domain/users/repositories/user-repository'
+
 import { PrismaService } from './prisma.service'
 import { PrismaUserMapper } from './mappers/prisma-user.mapper'
+import {
+  CreateUserData,
+  UserRepository,
+} from '@/domain/Users/repositories/user-repository'
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {

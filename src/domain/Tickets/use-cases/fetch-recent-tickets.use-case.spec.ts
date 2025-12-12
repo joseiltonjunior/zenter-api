@@ -1,5 +1,6 @@
 import { FetchRecentTicketsUseCase } from './fetch-recent-tickets.use-case'
 import { InMemoryTicketRepository } from '../repositories/in-memory-ticket.repository'
+import { randomUUID } from 'node:crypto'
 import { Ticket } from '../entities/ticket'
 
 describe('FetchRecentTicketsUseCase', () => {
@@ -13,7 +14,7 @@ describe('FetchRecentTicketsUseCase', () => {
 
   function createTicket(userId: string, createdAt: Date) {
     const ticket = new Ticket(
-      crypto.randomUUID(),
+      randomUUID(),
       `title-${createdAt.getTime()}`,
       null,
       'OPEN',

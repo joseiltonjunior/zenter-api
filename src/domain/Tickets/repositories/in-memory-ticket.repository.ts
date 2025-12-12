@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import { TicketRepository } from './ticket-repository'
 import { Ticket } from '../entities/ticket'
 import { CreateTicketDTO } from '../dtos/create-ticket.dto'
@@ -23,7 +23,7 @@ export class InMemoryTicketRepository implements TicketRepository {
 
   async create(data: CreateTicketDTO) {
     const ticket = new Ticket(
-      uuid(),
+      randomUUID(),
       data.title,
       data.description ?? null,
       'OPEN',
@@ -38,7 +38,7 @@ export class InMemoryTicketRepository implements TicketRepository {
 
   async createMessage(data: CreateMessageDTO): Promise<void> {
     const message: MessageDTO = {
-      id: uuid(),
+      id: randomUUID(),
       ticketId: data.ticketId,
       senderId: data.senderId,
       content: data.content,

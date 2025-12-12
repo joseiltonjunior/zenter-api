@@ -1,7 +1,7 @@
-import { InMemoryUserRepository } from '../../users/repositories/in-memory-user.repository'
 import { AuthenticateUserUseCase } from './authenticate-user.use-case'
 import { CreateUserUseCase } from './create-user.use-case'
 import { InvalidCredentialsError } from '../errors/invalid-credentials.error'
+import { InMemoryUserRepository } from '../repositories/in-memory-user.repository'
 
 describe('AuthenticateUserUseCase', () => {
   it('should authenticate a valid user', async () => {

@@ -10,8 +10,9 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { CreatePropertyUseCase } from '@/domain/properties/use-cases/create-property.use-case'
+
 import { z } from 'zod'
+import { CreatePropertyUseCase } from '@/domain/Properties/use-cases/create-property.use-case'
 
 const createPropertyBodySchema = z.object({
   title: z.string().min(3),

@@ -1,4 +1,4 @@
-import { Property } from '@/domain/properties/entities/property'
+import { Property } from '@/domain/Properties/entities/property'
 import { Property as PrismaProperty } from '@prisma/client'
 
 export class PrismaPropertyMapper {

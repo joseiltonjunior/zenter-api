@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-import { CreatePropertyUseCase } from '@/domain/properties/use-cases/create-property.use-case'
-import { DeletePropertyUseCase } from '@/domain/properties/use-cases/delete-property.use-case'
-
 import { CreatePropertyController } from '@/infra/http/controllers/properties/create-property.controller'
 import { DeletePropertyController } from '@/infra/http/controllers/properties/delete-property.controller'
 import { PropertyRepositoryToken } from '@/domain/Properties/repositories/property-repository'
 import { PrismaPropertyRepository } from '@/infra/database/prisma/prisma-property-repository.service'
+import { CreatePropertyUseCase } from '@/domain/Properties/use-cases/create-property.use-case'
+import { DeletePropertyUseCase } from '@/domain/Properties/use-cases/delete-property.use-case'
 
 @Module({
   controllers: [CreatePropertyController, DeletePropertyController],
