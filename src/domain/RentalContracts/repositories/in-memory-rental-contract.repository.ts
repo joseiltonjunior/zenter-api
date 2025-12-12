@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import { RentalContractRepository } from './rental-contract-repository'
 import { RentalContract } from '../entities/rental-contract'
 import { CreateRentalContractDTO } from '../dtos/create-rental-contract.dto'
@@ -11,7 +11,7 @@ export class InMemoryRentalContractRepository
 
   async create(data: CreateRentalContractDTO): Promise<RentalContract> {
     const contract = new RentalContract(
-      uuid(),
+      randomUUID(),
       data.userId,
       data.propertyId,
       data.adminId,

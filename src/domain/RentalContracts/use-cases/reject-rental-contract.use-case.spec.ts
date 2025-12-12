@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
 import { RejectRentalContractUseCase } from './reject-rental-contract.use-case'
 import { InMemoryRentalContractRepository } from '../repositories/in-memory-rental-contract.repository'
@@ -100,7 +100,7 @@ describe('RejectRentalContractUseCase', () => {
   it('should throw if contract does not exist', async () => {
     await expect(
       useCase.execute({
-        contractId: uuid(),
+        contractId: randomUUID(),
         adminId: admin.id,
         reason: 'Whatever',
       }),
