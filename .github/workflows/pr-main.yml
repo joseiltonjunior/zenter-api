@@ -26,8 +26,9 @@ jobs:
           --health-retries=5
 
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/zenter_test
-      JWT_SECRET: test-secret
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
       NODE_ENV: test
 
     steps:
@@ -38,17 +39,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-          run_install: false
-
-      - name: Enable pnpm cache
-        uses: actions/setup-node@v4
-        with:
-          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
