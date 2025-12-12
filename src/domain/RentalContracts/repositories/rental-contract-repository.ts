@@ -6,6 +6,8 @@ export interface RentalContractRepository {
   findById(ticketId: string): Promise<RentalContract | null>
   userHasActiveContract(userId: string, propertyId: string): Promise<boolean>
   activate(contractId: string): Promise<RentalContract | null>
+  cancel(contractId: string, reason: string): Promise<RentalContract | null>
+  reject(contractId: string, reason: string): Promise<RentalContract | null>
 }
 
 export const RentalContractRepositoryToken = Symbol('RentalContractRepository')

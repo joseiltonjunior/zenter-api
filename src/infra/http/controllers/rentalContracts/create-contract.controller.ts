@@ -6,6 +6,7 @@ import {
   ForbiddenException,
   BadRequestException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common'
 
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
@@ -58,7 +59,7 @@ export class CreateContractController {
       if (err instanceof PropertyNotAvailableError)
         throw new ConflictException(err.message)
 
-      throw err
+      throw new InternalServerErrorException('Failed to create contract.')
     }
   }
 }

@@ -46,7 +46,6 @@ export class ActivateContractController {
         )
       }
 
-      console.error('Activate contract error:', err)
       throw new BadRequestException('Failed to activate contract.')
     }
   }

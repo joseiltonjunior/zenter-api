@@ -56,4 +56,30 @@ export class InMemoryRentalContractRepository
         c.status === 'ACTIVE',
     )
   }
+
+  async cancel(id: string, reason: string): Promise<RentalContract | null> {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (!['PENDING', 'ACTIVE'].includes(contract.status)) return null
+
+    contract.status = 'CANCELED'
+    contract.cancelledAt = new Date()
+    contract.cancelReason = reason
+
+    return contract
+  }
+
+  async reject(id: string, reason: string): Promise<RentalContract | null> {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (contract.status !== 'PENDING') return null
+
+    contract.status = 'REJECTED'
+    contract.rejectedAt = new Date()
+    contract.rejectedReason = reason
+
+    return contract
+  }
 }
