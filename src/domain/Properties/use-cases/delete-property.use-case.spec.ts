@@ -1,9 +1,8 @@
-import { InMemoryPropertyRepository } from '@/domain/properties/repositories/in-memory-property.repository'
-import { DeletePropertyUseCase } from '@/domain/properties/use-cases/delete-property.use-case'
-
-import { PropertyHasActiveContractError } from '@/domain/properties/errors/property-has-active-contract.error'
-import { PropertyIsOccupiedError } from '@/domain/properties/errors/property-is-occupied.error'
-import { PropertyNotFoundError } from '@/domain/properties/errors/property-not-found.error'
+import { PropertyHasActiveContractError } from '../errors/property-has-active-contract.error'
+import { PropertyIsOccupiedError } from '../errors/property-is-occupied.error'
+import { PropertyNotFoundError } from '../errors/property-not-found.error'
+import { InMemoryPropertyRepository } from '../repositories/in-memory-property.repository'
+import { DeletePropertyUseCase } from './delete-property.use-case'
 
 describe('DeletePropertyUseCase', () => {
   it('should delete a property successfully', async () => {

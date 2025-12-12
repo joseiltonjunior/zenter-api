@@ -17,6 +17,8 @@ export interface PropertyRepository {
     reservedAt: Date,
     reservedUntil: Date,
   ): Promise<boolean>
+  markAsOccupied(propertyId: string): Promise<void>
+  markAsAvailable(propertyId: string): Promise<void>
 }
 
 export const PropertyRepositoryToken = Symbol('PropertyRepository')

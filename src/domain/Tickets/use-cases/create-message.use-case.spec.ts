@@ -2,7 +2,7 @@ import { InMemoryTicketRepository } from '../repositories/in-memory-ticket.repos
 import { TicketNotFoundError } from '../errors/ticket-not-found.error'
 
 import { Ticket } from '../entities/ticket'
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import { CreateMessageUseCase } from './create-message.use-case'
 import { MessageNotAllowedError } from '../errors/message-forbidden.error'
 import { ClosedTicketError } from '../errors/closed-ticket.error'
@@ -18,7 +18,7 @@ describe('CreateMessageUseCase', () => {
 
   function makeTicket(props?: Partial<Ticket>): Ticket {
     return new Ticket(
-      props?.id ?? uuid(),
+      props?.id ?? randomUUID(),
       props?.title ?? 'Test Ticket',
       props?.description ?? null,
       props?.status ?? 'OPEN',

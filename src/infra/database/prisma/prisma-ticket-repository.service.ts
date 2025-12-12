@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { TicketRepository } from '@/domain/tickets/repositories/ticket-repository'
+
 import { PrismaTicketMapper } from './mappers/prisma-ticket.mapper'
-import { CreateTicketDTO } from '@/domain/tickets/dtos/create-ticket.dto'
+
 import { CreateMessageDTO } from '@/domain/Tickets/dtos/create-message.dto'
+import { FetchRecentTicketsDTO } from '@/domain/Tickets/dtos/fetch-recent-tickets.dto'
+import { TicketRepository } from '@/domain/Tickets/repositories/ticket-repository'
+import { CreateTicketDTO } from '@/domain/Tickets/dtos/create-ticket.dto'
 
 @Injectable()
 export class PrismaTicketRepository implements TicketRepository {
@@ -45,5 +48,23 @@ export class PrismaTicketRepository implements TicketRepository {
         content: data.content,
       },
     })
+  }
+
+  async findRecent(params: FetchRecentTicketsDTO) {
+    const { page, perPage, isAdmin, userId } = params
+
+    const where = isAdmin ? {} : { userId }
+
+    const [tickets, total] = await Promise.all([
+      this.prisma.ticket.findMany({
+        where,
+        take: perPage,
+        skip: (page - 1) * perPage,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.ticket.count({ where }),
+    ])
+
+    return { tickets, total }
   }
 }

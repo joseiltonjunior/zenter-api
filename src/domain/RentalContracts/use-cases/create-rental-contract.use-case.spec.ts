@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
 import { CreateRentalContractUseCase } from './create-rental-contract.use-case'
 import { InMemoryRentalContractRepository } from '../repositories/in-memory-rental-contract.repository'
@@ -83,7 +83,7 @@ describe('CreateRentalContractUseCase', () => {
       endContract: new Date(Date.now() + 86400000),
       propertyId: property.id,
       userId: tenant.id,
-      adminId: uuid(),
+      adminId: randomUUID(),
     }
 
     await expect(useCase.execute(input)).rejects.toBeInstanceOf(
@@ -112,7 +112,7 @@ describe('CreateRentalContractUseCase', () => {
       initialContract: new Date(),
       endContract: new Date(Date.now() + 86400000),
       propertyId: property.id,
-      userId: uuid(),
+      userId: randomUUID(),
       adminId: admin.id,
     }
 

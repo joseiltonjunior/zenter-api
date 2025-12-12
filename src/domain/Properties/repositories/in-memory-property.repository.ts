@@ -1,6 +1,6 @@
 import { PropertyRepository, CreatePropertyData } from './property-repository'
 import { Property } from '../entities/property'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
 export class InMemoryPropertyRepository implements PropertyRepository {
   properties: Property[] = []
@@ -9,7 +9,7 @@ export class InMemoryPropertyRepository implements PropertyRepository {
 
   async create(data: CreatePropertyData): Promise<Property> {
     const property = new Property(
-      uuidv4(),
+      randomUUID(),
       data.title,
       data.type,
       'AVAILABLE',
@@ -50,5 +50,23 @@ export class InMemoryPropertyRepository implements PropertyRepository {
     property.reservedUntil = reservedUntil
 
     return true
+  }
+
+  async markAsOccupied(propertyId: string): Promise<void> {
+    const p = this.properties.find((i) => i.id === propertyId)
+    if (p) {
+      p.status = 'OCCUPIED'
+      p.reservedAt = null
+      p.reservedUntil = null
+    }
+  }
+
+  async markAsAvailable(propertyId: string): Promise<void> {
+    const p = this.properties.find((i) => i.id === propertyId)
+    if (p) {
+      p.status = 'AVAILABLE'
+      p.reservedAt = null
+      p.reservedUntil = null
+    }
   }
 }

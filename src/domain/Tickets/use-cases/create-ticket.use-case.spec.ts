@@ -4,6 +4,7 @@ import { ForbiddenToOpenTicketError } from '../errors/forbidden-to-open-ticket.e
 import { DuplicateTicketError } from '../errors/duplicate-ticket.error'
 import { InMemoryTicketRepository } from '../repositories/in-memory-ticket.repository'
 import { InMemoryRentalContractRepository } from '@/domain/RentalContracts/repositories/in-memory-rental-contract.repository'
+import { RentalContract } from '@/domain/RentalContracts/entities/rental-contract'
 
 describe('CreateTicketUseCase', () => {
   let ticketRepo: InMemoryTicketRepository
@@ -76,7 +77,20 @@ describe('CreateTicketUseCase', () => {
   })
 
   it('should allow user to open ticket for property with active contract', async () => {
-    contractRepo.markActive('user-1', 'property-1')
+    // Criando contrato PENDING no repositório de contratos
+    const activeContract = new RentalContract(
+      'contract-1',
+      'user-1',
+      'property-1',
+      'admin-1',
+      new Date(),
+      new Date(Date.now() + 86400000 * 30),
+      'ACTIVE',
+      new Date(),
+      new Date(), // activatedAt
+    )
+
+    contractRepo.items.push(activeContract)
 
     const ticket = await useCase.execute({
       title: 'Sink broken',

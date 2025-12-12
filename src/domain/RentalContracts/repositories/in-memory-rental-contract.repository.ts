@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import { RentalContractRepository } from './rental-contract-repository'
 import { RentalContract } from '../entities/rental-contract'
 import { CreateRentalContractDTO } from '../dtos/create-rental-contract.dto'
@@ -11,7 +11,7 @@ export class InMemoryRentalContractRepository
 
   async create(data: CreateRentalContractDTO): Promise<RentalContract> {
     const contract = new RentalContract(
-      uuid(),
+      randomUUID(),
       data.userId,
       data.propertyId,
       data.adminId,
@@ -32,11 +32,54 @@ export class InMemoryRentalContractRepository
     return contract
   }
 
-  async markActive(userId: string, propertyId: string) {
-    this.activeContracts.add(`${userId}:${propertyId}`)
+  async findById(id: string) {
+    return this.items.find((t) => t.id === id) ?? null
+  }
+
+  async activate(id: string) {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (contract.status !== 'PENDING') return null
+
+    contract.status = 'ACTIVE'
+    contract.activatedAt = new Date()
+
+    return contract
   }
 
   async userHasActiveContract(userId: string, propertyId: string) {
-    return this.activeContracts.has(`${userId}:${propertyId}`)
+    return this.items.some(
+      (c) =>
+        c.userId === userId &&
+        c.propertyId === propertyId &&
+        c.status === 'ACTIVE',
+    )
+  }
+
+  async cancel(id: string, reason: string): Promise<RentalContract | null> {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (!['PENDING', 'ACTIVE'].includes(contract.status)) return null
+
+    contract.status = 'CANCELED'
+    contract.cancelledAt = new Date()
+    contract.cancelReason = reason
+
+    return contract
+  }
+
+  async reject(id: string, reason: string): Promise<RentalContract | null> {
+    const contract = this.items.find((c) => c.id === id)
+    if (!contract) return null
+
+    if (contract.status !== 'PENDING') return null
+
+    contract.status = 'REJECTED'
+    contract.rejectedAt = new Date()
+    contract.rejectedReason = reason
+
+    return contract
   }
 }

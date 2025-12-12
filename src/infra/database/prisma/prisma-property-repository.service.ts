@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
+
+import { PrismaPropertyMapper } from './mappers/prisma-property.mapper'
 import {
   CreatePropertyData,
   PropertyRepository,
-} from '@/domain/properties/repositories/property-repository'
-import { PrismaPropertyMapper } from './mappers/prisma-property.mapper'
+} from '@/domain/Properties/repositories/property-repository'
 
 @Injectable()
 export class PrismaPropertyRepository implements PropertyRepository {
@@ -50,5 +51,30 @@ export class PrismaPropertyRepository implements PropertyRepository {
     })
 
     return result.count > 0
+  }
+
+  async markAsOccupied(propertyId: string) {
+    await this.prisma.property.updateMany({
+      where: {
+        id: propertyId,
+        OR: [{ status: 'RESERVED' }, { status: 'AVAILABLE' }],
+      },
+      data: {
+        status: 'OCCUPIED',
+        reservedAt: null,
+        reservedUntil: null,
+      },
+    })
+  }
+
+  async markAsAvailable(propertyId: string) {
+    await this.prisma.property.updateMany({
+      where: { id: propertyId },
+      data: {
+        status: 'AVAILABLE',
+        reservedAt: null,
+        reservedUntil: null,
+      },
+    })
   }
 }

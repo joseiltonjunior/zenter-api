@@ -1,9 +1,10 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { AuthenticateUserUseCase } from '@/domain/users/use-cases/authenticate-user.use-case'
+
 import { JwtService } from '@nestjs/jwt'
 import z from 'zod'
-import { InvalidCredentialsError } from '@/domain/users/errors/invalid-credentials.error'
+import { AuthenticateUserUseCase } from '@/domain/Users/use-cases/authenticate-user.use-case'
+import { InvalidCredentialsError } from '@/domain/Users/errors/invalid-credentials.error'
 
 const authenticateBodySchema = z.object({
   email: z.email(),

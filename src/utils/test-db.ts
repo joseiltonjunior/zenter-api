@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 import { execSync } from 'child_process'
 import { PrismaClient } from '@prisma/client'
 

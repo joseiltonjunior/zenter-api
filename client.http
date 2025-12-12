@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Vamos!",
+    "title": "deu boooom!!",
     "description": "Quero encerrar o contrato!"
 }
 
@@ -93,14 +93,14 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name activate_contract
-POST {{baseUrl}}/contracts/{{contractId}}/activate
+POST {{baseUrl}}/contracts/a5ad050e-baeb-491a-ad78-fbd63bef20e3/activate
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
 
 # @name reject_contract
-POST {{baseUrl}}/contracts/{{contractId}}/reject
+POST {{baseUrl}}/contracts/a5ad050e-baeb-491a-ad78-fbd63bef20e3/reject
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -111,7 +111,7 @@ Content-Type: application/json
 ###
 
 # @name cancel_contract
-POST {{baseUrl}}/contracts/{{contractId}}/cancel
+POST {{baseUrl}}/contracts/a5ad050e-baeb-491a-ad78-fbd63bef20e3/cancel
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
