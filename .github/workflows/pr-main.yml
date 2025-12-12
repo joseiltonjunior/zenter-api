@@ -7,7 +7,6 @@ on:
 
 jobs:
   test:
-    name: Run Unit & E2E Tests
     runs-on: ubuntu-latest
 
     services:
@@ -32,20 +31,31 @@ jobs:
       NODE_ENV: test
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
+      # 1️⃣ Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
 
+      # 2️⃣ Install pnpm AND add to PATH
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
+      # 3️⃣ Verify pnpm exists (this prevents silent failures)
+      - name: Verify pnpm
+        run: pnpm --version
+
+      # 4️⃣ Enable pnpm cache (AFTER pnpm exists)
+      - name: Enable pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+
+      # 5️⃣ Install deps
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
