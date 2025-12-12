@@ -11,11 +11,10 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 
-import { CreateTicketUseCase } from '@/domain/tickets/use-cases/create-ticket.use-case'
-import { ForbiddenToOpenTicketError } from '@/domain/tickets/errors/forbidden-to-open-ticket.error'
-import { DuplicateTicketError } from '@/domain/tickets/errors/duplicate-ticket.error'
-
 import { z } from 'zod'
+import { CreateTicketUseCase } from '@/domain/Tickets/use-cases/create-ticket.use-case'
+import { ForbiddenToOpenTicketError } from '@/domain/Tickets/errors/forbidden-to-open-ticket.error'
+import { DuplicateTicketError } from '@/domain/Tickets/errors/duplicate-ticket.error'
 
 const createTicketBodySchema = z.object({
   title: z.string().min(3),

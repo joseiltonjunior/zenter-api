@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common'
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-import { CreateUserUseCase } from '@/domain/users/use-cases/create-user.use-case'
-import { AuthenticateUserUseCase } from '@/domain/users/use-cases/authenticate-user.use-case'
 import { JwtModule } from '@nestjs/jwt'
 import { CreateAccountController } from '../controllers/users/create-account.controller'
 import { AuthenticateController } from '../controllers/users/authenticate.controller'
@@ -12,6 +10,8 @@ import {
   UserRepository,
   UserRepositoryToken,
 } from '@/domain/Users/repositories/user-repository'
+import { CreateUserUseCase } from '@/domain/Users/use-cases/create-user.use-case'
+import { AuthenticateUserUseCase } from '@/domain/Users/use-cases/authenticate-user.use-case'
 
 @Module({
   imports: [

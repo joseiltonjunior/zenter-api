@@ -1,4 +1,4 @@
-import { Ticket } from '@/domain/tickets/entities/ticket'
+import { Ticket } from '@/domain/Tickets/entities/ticket'
 import { Ticket as PrismaTicket } from '@prisma/client'
 
 export class PrismaTicketMapper {

@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { TicketRepository } from '@/domain/tickets/repositories/ticket-repository'
+
 import { PrismaTicketMapper } from './mappers/prisma-ticket.mapper'
-import { CreateTicketDTO } from '@/domain/tickets/dtos/create-ticket.dto'
+
 import { CreateMessageDTO } from '@/domain/Tickets/dtos/create-message.dto'
 import { FetchRecentTicketsDTO } from '@/domain/Tickets/dtos/fetch-recent-tickets.dto'
+import { TicketRepository } from '@/domain/Tickets/repositories/ticket-repository'
+import { CreateTicketDTO } from '@/domain/Tickets/dtos/create-ticket.dto'
 
 @Injectable()
 export class PrismaTicketRepository implements TicketRepository {

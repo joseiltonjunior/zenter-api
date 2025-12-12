@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
+
+import { PrismaPropertyMapper } from './mappers/prisma-property.mapper'
 import {
   CreatePropertyData,
   PropertyRepository,
-} from '@/domain/properties/repositories/property-repository'
-import { PrismaPropertyMapper } from './mappers/prisma-property.mapper'
+} from '@/domain/Properties/repositories/property-repository'
 
 @Injectable()
 export class PrismaPropertyRepository implements PropertyRepository {

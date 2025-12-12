@@ -1,6 +1,6 @@
-import { InMemoryUserRepository } from '../../users/repositories/in-memory-user.repository'
 import { CreateUserUseCase } from './create-user.use-case'
 import { UserAlreadyExistsError } from '../errors/user-already-exists.error'
+import { InMemoryUserRepository } from '../repositories/in-memory-user.repository'
 
 describe('CreateUserUseCase', () => {
   it('should create a new user', async () => {

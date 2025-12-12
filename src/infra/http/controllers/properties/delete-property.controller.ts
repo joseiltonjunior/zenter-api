@@ -11,10 +11,10 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 
-import { DeletePropertyUseCase } from '@/domain/properties/use-cases/delete-property.use-case'
-import { PropertyNotFoundError } from '@/domain/properties/errors/property-not-found.error'
-import { PropertyHasActiveContractError } from '@/domain/properties/errors/property-has-active-contract.error'
-import { PropertyIsOccupiedError } from '@/domain/properties/errors/property-is-occupied.error'
+import { PropertyNotFoundError } from '@/domain/Properties/errors/property-not-found.error'
+import { PropertyHasActiveContractError } from '@/domain/Properties/errors/property-has-active-contract.error'
+import { PropertyIsOccupiedError } from '@/domain/Properties/errors/property-is-occupied.error'
+import { DeletePropertyUseCase } from '@/domain/Properties/use-cases/delete-property.use-case'
 
 @Controller('/properties/:id')
 @UseGuards(JwtAuthGuard)

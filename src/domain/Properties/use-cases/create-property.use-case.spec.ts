@@ -1,5 +1,5 @@
-import { InMemoryPropertyRepository } from '@/domain/properties/repositories/in-memory-property.repository'
-import { CreatePropertyUseCase } from '@/domain/properties/use-cases/create-property.use-case'
+import { InMemoryPropertyRepository } from '../repositories/in-memory-property.repository'
+import { CreatePropertyUseCase } from './create-property.use-case'
 
 describe('CreatePropertyUseCase', () => {
   it('should create a property', async () => {

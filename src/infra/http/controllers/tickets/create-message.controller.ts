@@ -11,12 +11,10 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
-
-import { CreateMessageUseCase } from '@/domain/tickets/use-cases/create-message.use-case'
-import { TicketNotFoundError } from '@/domain/tickets/errors/ticket-not-found.error'
-
-import { ClosedTicketError } from '@/domain/tickets/errors/closed-ticket.error'
-import { MessageNotAllowedError } from '@/domain/tickets/errors/message-forbidden.error'
+import { CreateMessageUseCase } from '@/domain/Tickets/use-cases/create-message.use-case'
+import { TicketNotFoundError } from '@/domain/Tickets/errors/ticket-not-found.error'
+import { MessageNotAllowedError } from '@/domain/Tickets/errors/message-forbidden.error'
+import { ClosedTicketError } from '@/domain/Tickets/errors/closed-ticket.error'
 
 const schema = z.object({
   message: z.string().min(3),
