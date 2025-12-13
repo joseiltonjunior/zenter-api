@@ -13,6 +13,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 import { z } from 'zod'
 import { CreatePropertyUseCase } from '@/domain/Properties/use-cases/create-property.use-case'
+import { ApiTags } from '@nestjs/swagger'
 
 const createPropertyBodySchema = z.object({
   title: z.string().min(3),
@@ -24,6 +25,7 @@ const bodyValidationPipe = new ZodValidationPipe(createPropertyBodySchema)
 
 type CreatePropertyBodySchema = z.infer<typeof createPropertyBodySchema>
 
+@ApiTags('Property')
 @Controller('/properties')
 @UseGuards(JwtAuthGuard)
 export class CreatePropertyController {

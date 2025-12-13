@@ -7,6 +7,7 @@ import z from 'zod'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { FetchRecentTicketsUseCase } from '@/domain/Tickets/use-cases/fetch-recent-tickets.use-case'
+import { ApiTags } from '@nestjs/swagger'
 
 const pageQueryParamSchema = z
   .string()
@@ -17,6 +18,7 @@ const pageQueryParamSchema = z
 
 const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
 
+@ApiTags('Tickets')
 @Controller('/tickets')
 @UseGuards(JwtAuthGuard)
 export class FetchRecentTicketController {

@@ -20,6 +20,7 @@ import { RejectRentalContractUseCase } from '@/domain/RentalContracts/use-cases/
 import { OnlyAdminCanRejectContractError } from '@/domain/RentalContracts/errors/only-admin-can-reject-contract.error'
 import { ContractNotFoundError } from '@/domain/RentalContracts/errors/contract-not-found.error'
 import { InvalidContractStatusError } from '@/domain/RentalContracts/errors/invalid-contract-status.error'
+import { ApiTags } from '@nestjs/swagger'
 
 const rejectContractSchema = z.object({
   reason: z
@@ -32,6 +33,7 @@ type RejectContractSchema = z.infer<typeof rejectContractSchema>
 
 const rejectValidationPipe = new ZodValidationPipe(rejectContractSchema)
 
+@ApiTags('Contracts')
 @Controller('/contracts')
 @UseGuards(JwtAuthGuard)
 export class RejectContractController {
