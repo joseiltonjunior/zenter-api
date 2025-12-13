@@ -15,7 +15,9 @@ import { PropertyNotFoundError } from '@/domain/Properties/errors/property-not-f
 import { PropertyHasActiveContractError } from '@/domain/Properties/errors/property-has-active-contract.error'
 import { PropertyIsOccupiedError } from '@/domain/Properties/errors/property-is-occupied.error'
 import { DeletePropertyUseCase } from '@/domain/Properties/use-cases/delete-property.use-case'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Property')
 @Controller('/properties/:id')
 @UseGuards(JwtAuthGuard)
 export class DeletePropertyController {

@@ -16,7 +16,9 @@ import { OnlyAdminCanActivateContractError } from '@/domain/RentalContracts/erro
 import { ContractNotFoundError } from '@/domain/RentalContracts/errors/contract-not-found.error'
 import { InvalidContractStatusError } from '@/domain/RentalContracts/errors/invalid-contract-status.error'
 import { ActivateRentalContractUseCase } from '@/domain/RentalContracts/use-cases/activate-rental-contract.use-case'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Contracts')
 @Controller('/contracts')
 @UseGuards(JwtAuthGuard)
 export class ActivateContractController {

@@ -20,6 +20,7 @@ import { OnlyAdminCanCreateContractError } from '@/domain/RentalContracts/errors
 import { InvalidContractDatesError } from '@/domain/RentalContracts/errors/invalid-contract-dates.error'
 import { TenantNotFoundError } from '@/domain/RentalContracts/errors/tenant-not-found.error'
 import { PropertyNotAvailableError } from '@/domain/RentalContracts/errors/property-not-available.error'
+import { ApiTags } from '@nestjs/swagger'
 
 const bodySchema = z.object({
   initialContract: z.string(),
@@ -28,6 +29,7 @@ const bodySchema = z.object({
   userId: z.uuid(),
 })
 
+@ApiTags('Contracts')
 @Controller('/contracts')
 @UseGuards(JwtAuthGuard)
 export class CreateContractController {

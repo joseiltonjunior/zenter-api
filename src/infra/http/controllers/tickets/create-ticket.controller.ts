@@ -15,6 +15,7 @@ import { z } from 'zod'
 import { CreateTicketUseCase } from '@/domain/Tickets/use-cases/create-ticket.use-case'
 import { ForbiddenToOpenTicketError } from '@/domain/Tickets/errors/forbidden-to-open-ticket.error'
 import { DuplicateTicketError } from '@/domain/Tickets/errors/duplicate-ticket.error'
+import { ApiTags } from '@nestjs/swagger'
 
 const createTicketBodySchema = z.object({
   title: z.string().min(3),
@@ -24,6 +25,7 @@ const createTicketBodySchema = z.object({
 
 type CreateTicketBody = z.infer<typeof createTicketBodySchema>
 
+@ApiTags('Tickets')
 @Controller('/tickets')
 @UseGuards(JwtAuthGuard)
 export class CreateTicketController {

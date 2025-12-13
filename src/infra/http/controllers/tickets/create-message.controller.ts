@@ -15,6 +15,7 @@ import { CreateMessageUseCase } from '@/domain/Tickets/use-cases/create-message.
 import { TicketNotFoundError } from '@/domain/Tickets/errors/ticket-not-found.error'
 import { MessageNotAllowedError } from '@/domain/Tickets/errors/message-forbidden.error'
 import { ClosedTicketError } from '@/domain/Tickets/errors/closed-ticket.error'
+import { ApiTags } from '@nestjs/swagger'
 
 const schema = z.object({
   message: z.string().min(3),
@@ -23,6 +24,7 @@ const schema = z.object({
 
 type BodySchema = z.infer<typeof schema>
 
+@ApiTags('Tickets')
 @Controller('/messages')
 @UseGuards(JwtAuthGuard)
 export class CreateMessageController {
