@@ -3,8 +3,8 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 import { JwtService } from '@nestjs/jwt'
 import z from 'zod'
-import { AuthenticateUserUseCase } from '@/domain/Users/use-cases/authenticate-user.use-case'
-import { InvalidCredentialsError } from '@/domain/Users/errors/invalid-credentials.error'
+import { AuthenticateUserUseCase } from '@/domain/users/use-cases/authenticate-user.use-case'
+import { InvalidCredentialsError } from '@/domain/users/errors/invalid-credentials.error'
 
 import {
   ApiBadRequestResponse,
